@@ -13,8 +13,8 @@ namespace Parser.Core.BTC
             StartPoint = start;
             EndPoint = end;
         }
-        public string BaseUrl { get; set; } = "https://www.coindesk.com/price";
-        public string Prefix { get; set; } = "bitcoin/";
+        public string BaseUrl { get; set; } = "https://www.google.com/finance/quote";
+        public string Prefix { get; set; } = "BTC-USD";
         public int StartPoint { get ; set ; }
         public int EndPoint { get ; set ; }
     }

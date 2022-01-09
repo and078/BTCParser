@@ -6,6 +6,10 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net.NetworkInformation;
+
+//c:\users\andre\source\repos\parser\Parser\Form1.cs
+//c:\users\andre\source\repos\parser\Parser\Form1.cs
 
 namespace Parser
 {
@@ -23,33 +27,35 @@ namespace Parser
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BookContext;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            sqlConnection = new SqlConnection(connectionString);
-            await sqlConnection.OpenAsync();
-            SqlDataReader sqlDataReader = null;
-            SqlCommand command = new SqlCommand("SELECT * FROM [Books]", sqlConnection);
+            CheckInternetConnection();
+            //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PayContext;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            //sqlConnection = new SqlConnection(connectionString);
+            //await sqlConnection.OpenAsync();
+            //SqlDataReader sqlDataReader = null;
+            //SqlCommand command = new SqlCommand("SELECT * FROM [Pay_1]", sqlConnection);
 
-            try
-            {
-                sqlDataReader = await command.ExecuteReaderAsync();
-                while (await sqlDataReader.ReadAsync())
-                {
-                    ListTitles.Items.Add(Convert.ToString(sqlDataReader["ID"]) + "\t" +
-                        Convert.ToString(sqlDataReader["Name"]) + "\t" + 
-                        Convert.ToString(sqlDataReader["Author"]) + "\t" +
-                        Convert.ToString(sqlDataReader["Price"]));
-                }
-            }
-            catch (Exception ex)
-            {
+            //try
+            //{
+            //    sqlDataReader = await command.ExecuteReaderAsync();
+            //    while (await sqlDataReader.ReadAsync())
+            //    {
+            //        ListTitles.Items.Add(Convert.ToString(sqlDataReader["id"]) + "\t" +
+            //            Convert.ToString(sqlDataReader["date"]) + "\t" + 
+            //            Convert.ToString(sqlDataReader["Summ"]) + "\t" +
+            //            Convert.ToString(sqlDataReader["RestSumm"]) + "\t" +
+            //            Convert.ToString(sqlDataReader["Annotation"]));
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
 
-                MessageBox.Show(ex.Message.ToString(), ex.Source.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (sqlDataReader != null)
-                    sqlDataReader.Close();
-            }
+            //    MessageBox.Show(ex.Message.ToString(), ex.Source.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
+            //finally
+            //{
+            //    if (sqlDataReader != null)
+            //        sqlDataReader.Close();
+            //}
         }
 
         public void RunFromAnotherForm()
@@ -70,6 +76,7 @@ namespace Parser
 
         private void ButtonStart_Click(object sender, EventArgs e)
         {
+            CheckInternetConnection();
             ListTitles.Items.Clear();
             CursMdParser.dict.Clear();
             ButtonStart.Enabled = false;
@@ -114,6 +121,26 @@ namespace Parser
         {
             Form2 form2 = new Form2(this);
             form2.Show();
+        }
+
+        private void CheckInternetConnection()
+        {
+            try
+            {
+                Ping myPing = new Ping();
+                String host = "google.com";
+                byte[] buffer = new byte[32];
+                int timeout = 1000;
+                PingOptions pingOptions = new PingOptions();
+                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                //return (reply.Status == IPStatus.Success);
+            }
+            catch (Exception)
+            {
+                //return false;
+                MessageBox.Show("No Internet connection!\nThe App will be closed!");
+                Close();
+            }
         }
     }
 }

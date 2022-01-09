@@ -14,12 +14,13 @@ namespace Parser.Core.BTC
 
         public string[] Parse(IHtmlDocument document)
         {
+
             var list = new List<string>();
-            var items = document.QuerySelectorAll("span").Where(item => item.ClassName != null && item.ClassName.Contains("typography__StyledTypography-owin6q-0")).Skip(1).Take(1);
+            var items = document.QuerySelectorAll("div").Where(item => item.ClassName != null && item.ClassName.Contains("fxKbKc"));
 
             foreach (var item in items)
             {
-                list.Add(item.TextContent);
+                list.Add(item.TextContent + " USD");
             }
             return list.ToArray();
         }
