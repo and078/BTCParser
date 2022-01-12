@@ -25,7 +25,7 @@ namespace Parser
             InitializeComponent();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             CheckInternetConnection();
             //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PayContext;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
