@@ -19,6 +19,7 @@ namespace Parser
         ParserWorker<string[]> curriencesParser;
         ParserWorker<string[]> bitcoinParser;
         Dictionary<string, decimal> CuriencesDictionary;
+        bool paginaionEnabled;
         public Form1()
         {
             InitializeComponent();
@@ -27,12 +28,12 @@ namespace Parser
 
         private void FormLoadParserOnNewData(object arg1, string[] arg2)
         {
-            CuriencesDictionary = calculator.GetCurrArray(arg2);
+            CuriencesDictionary = calculator.GetCurrencyDictionary(arg2);
         }
 
         private void FormLoadParserOnCompleted(object obj)
         {
-
+            
         }
         private void ParserOnCompletedCurr(object obj)
         {
@@ -41,7 +42,7 @@ namespace Parser
 
         private void ParserOnNewDataCurr(object obj, string[] arg)
         {
-            CuriencesDictionary = calculator.GetCurrArray(arg);
+            CuriencesDictionary = calculator.GetCurrencyDictionary(arg);
             ListTitles.Items.Add("Curriences in MDL");
             ListTitles.Items.AddRange(arg);
         }
@@ -55,11 +56,13 @@ namespace Parser
         {
             decimal BTC_In_USD_Price = calculator.GetBTCPriceUSD(arg2[0]);
             ListTitles.Items.Add("Bitcoin price in some curriences");
-            ListTitles.Items.AddRange(calculator.BTC_In_Curriences(CuriencesDictionary, BTC_In_USD_Price));
+            ListTitles.Items.AddRange(calculator.CalculateBTC_In_Curriences(CuriencesDictionary, BTC_In_USD_Price));
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            paginaionEnabled = false;
+            PaginationAtivator(paginaionEnabled);
             CheckInternetConnection();
 
             new Thread(() =>
@@ -71,7 +74,7 @@ namespace Parser
                 onLoadCurriencesParser.Start();
             }).Start();
 
-            #region
+            #region SQLConnection(not in use)
             //string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=PayContext;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             //sqlConnection = new SqlConnection(connectionString);
             //await sqlConnection.OpenAsync();
@@ -102,15 +105,17 @@ namespace Parser
             //}
             #endregion
         }
-        public void RunFromAnotherForm()
+        public void RunCustomParesrFromAnotherForm(string[] customParserData)
         {
-            ButtonStart_Click(new Form2(), EventArgs.Empty);
+            //ButtonStart_Click(new Form2(), EventArgs.Empty);
+            //ListTitles.Items.Clear();
+            //ListTitles.Items.AddRange(customParserData);
         }
 
         private void ButtonStart_Click(object sender, EventArgs e)
         {
-            CheckInternetConnection();
             ListTitles.Items.Clear();
+            CheckInternetConnection();
             ButtonStart.Enabled = false;
 
             if (radioButtonCurriences.Checked)
@@ -139,15 +144,6 @@ namespace Parser
             ButtonStart.Enabled = true;
         }
 
-        private void ButtonAbort_Click(object sender, EventArgs e)
-        {
-            curriencesParser.Abort();
-            bitcoinParser.Abort();
-            if (sqlConnection != null)
-            {
-                sqlConnection.Close();
-            }
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -170,9 +166,23 @@ namespace Parser
             catch (Exception)
             {
                 //return false;
-                MessageBox.Show("No Internet connection!\nThe App will be closed!");
-                Close();
+                MessageBox.Show("Internet connection needed!");
+                Form1_Load(this, EventArgs.Empty);
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            paginaionEnabled = !paginaionEnabled;
+            PaginationAtivator(paginaionEnabled);
+        }
+
+        private void PaginationAtivator(bool isEnabled)
+        {
+            StartPoint.Enabled = isEnabled;
+            NumericStart.Enabled = isEnabled;
+            label2.Enabled = isEnabled;
+            NumericEnd.Enabled = isEnabled;
         }
     }
 }

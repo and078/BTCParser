@@ -1,5 +1,7 @@
-﻿using AngleSharp.Html.Parser;
+﻿using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 using System;
+using Parser;
 
 namespace Parser.Core
 {
@@ -42,12 +44,12 @@ namespace Parser.Core
         public event Action<object> OnCompleted;
         public ParserWorker(IParser<T> parser)
         {
-            this.parser = parser;
+            this.Parser = parser;
         }
 
         public ParserWorker(IParser<T> parser, IParserSettings parserSettings) : this(parser)
         {
-            this.parserSettings = parserSettings;
+            this.Settings = parserSettings;
         }
 
         public void Start()
@@ -63,18 +65,28 @@ namespace Parser.Core
 
         private async void Worker()
         {
+            string source;
             for (int i = parserSettings.StartPoint; i <= parserSettings.EndPoint; i++)
             {
+                
                 if (!isActive)
                 {
                     OnCompleted?.Invoke(this);
                     return;
                 }
 
-                var source = await loader.GetSourseByPageId(i);
-                var domParser = new HtmlParser();
-                var document = await domParser.ParseDocumentAsync(source);
+                try
+                {
+                    source = await loader.GetSourseByPageId(i);
+                }
+                catch
+                {
+                    return;
+                }
 
+                var domParser = new HtmlParser();
+
+                var document = await domParser.ParseDocumentAsync(source);
                 var result = parser.Parse(document);
                 OnNewData?.Invoke(this, result);
             }

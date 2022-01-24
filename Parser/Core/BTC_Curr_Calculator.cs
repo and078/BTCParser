@@ -8,7 +8,7 @@ namespace Parser.Core
 {
     internal class BTC_Curr_Calculator
     {
-        public Dictionary<string, decimal> GetCurrArray(string[] args)
+        public Dictionary<string, decimal> GetCurrencyDictionary(string[] args)
         {
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
             foreach (var arg in args)
@@ -26,7 +26,7 @@ namespace Parser.Core
             return Decimal.Parse(dec);
         }
 
-        public string[] BTC_In_Curriences(Dictionary<string, decimal> dict, decimal btcInUSD)
+        public string[] CalculateBTC_In_Curriences(Dictionary<string, decimal> dict, decimal btcInUSD)
         {
             decimal BTC_In_Lei = dict["USD"] * btcInUSD;
             List<string> list = new List<string>();

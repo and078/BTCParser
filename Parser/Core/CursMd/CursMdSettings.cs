@@ -14,7 +14,7 @@ namespace Parser.Core.CursMd
             EndPoint = end;
         }
         public string BaseUrl { get; set; } = "https://www.curs.md/ru";
-        public string Prefix { get; set; } = "";//"curs_valutar/oficial/";
+        public string Prefix { get; set; } = "";
         public int StartPoint { get ; set ; }
         public int EndPoint { get ; set ; }
     }
