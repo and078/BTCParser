@@ -19,7 +19,7 @@ namespace Parser
         ParserWorker<string[]> curriencesParser;
         ParserWorker<string[]> bitcoinParser;
         Dictionary<string, decimal> CuriencesDictionary;
-        bool paginaionEnabled;
+        bool isPaginaionEnabled;
         public Form1()
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace Parser
 
         private void FormLoadParserOnCompleted(object obj)
         {
-            
+            ListTitles.Items.Add("*******************************");
         }
         private void ParserOnCompletedCurr(object obj)
         {
@@ -61,8 +61,8 @@ namespace Parser
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            paginaionEnabled = false;
-            PaginationAtivator(paginaionEnabled);
+            isPaginaionEnabled = false;
+            PaginationAtivator(isPaginaionEnabled);
             CheckInternetConnection();
 
             new Thread(() =>
@@ -173,8 +173,8 @@ namespace Parser
 
         private void button2_Click(object sender, EventArgs e)
         {
-            paginaionEnabled = !paginaionEnabled;
-            PaginationAtivator(paginaionEnabled);
+            isPaginaionEnabled = !isPaginaionEnabled;
+            PaginationAtivator(isPaginaionEnabled);
         }
 
         private void PaginationAtivator(bool isEnabled)
